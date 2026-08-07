@@ -1,5 +1,5 @@
+# IMAGE
 create image
-
 docker build -t my-app-image .
 
 show danh sách image
@@ -7,7 +7,7 @@ docker image list
 
 docker image remove [IMAGE_NAME/ID]
 
-
+# CONTAINER
 create container
 docker run --name my-app-container -d -p 3000:3000 my-app-image
 
