@@ -70,6 +70,7 @@ docker stats
     - job / bot
 
 ```bash
+docker network list
 docker network create [NETWORK_NAME]
 docker network remove [NETWORK_NAME/ID]
 
@@ -77,5 +78,45 @@ docker network connect [NETWORK_NAME/ID] [CONTAINER_NAME/ID]
 docker run --network [NETWORK_NAME/ID] --name CONTAINER_NAME -d -p 3000:3000 ten_image
 docker network disconnect [NETWORK_NAME/ID] [CONTAINER_NAME/ID]
 docker inspect [NETWORK_NAME/ID]
-
 ```
+
+# VOLUME
+
+Volume chỉ được mount lúc `docker run`
+
+```bash
+docker volume list
+docker volume create [VOLUME_NAME]
+```
+
+tạo container với database
+
+Postgres - 5432
+    - từ 17 trở xuống: /var/lib/postgresql/data
+    - từ 18 trở lên: /var/lib/postgresql
+MySQL - 3306 - /var/lib/mysql
+SQLServer - 1433 - /var/opt/mssql
+Mongo - 27017 - /data/db
+
+```bash
+docker run --name database -d -e POSTGRES_PASSWORD=12345 -p 5433:5432 postgres:18
+```
+
+```bash
+# PostgreSQL 18
+docker volume create postgres_data_volume
+docker run --name database -d -v postgres_data_volume:/var/lib/postgresql -e POSTGRES_PASSWORD=12345 -p 5432:5432 postgres:18
+
+# Mongo
+docker volume create mongo_data_volume
+docker run --name mongo -d -v mongo_data_volume:/data/db mongo
+
+# MySQL
+docker volume create mysql_data_volume
+docker run --name mysql -d -v mysql_data_volume:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 mysql
+
+# SQL Server
+docker volume create sqlserver_data_volume
+docker run --name sqlserver -d -v sqlserver_data_volume:/var/opt/mssql -e ACCEPT_EULA=Y -e MSSQL_SA_PASSWORD='YourStrong!Pass123' mcr.microsoft.com/mssql server:2022-latest
+```
+
