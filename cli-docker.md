@@ -105,7 +105,12 @@ docker run --name database -d -e POSTGRES_PASSWORD=12345 -p 5433:5432 postgres:1
 ```bash
 # PostgreSQL 18
 docker volume create postgres_data_volume
+
+# Mount volume
 docker run --name database -d -v postgres_data_volume:/var/lib/postgresql -e POSTGRES_PASSWORD=12345 -p 5432:5432 postgres:18
+
+# Mount đường trên máy host (recommend)
+docker run --name database -d -v ./database_data:/var/lib/postgresql -e POSTGRES_PASSWORD=12345 -p 5432:5432 postgres:18
 
 # Mongo
 docker volume create mongo_data_volume
@@ -119,4 +124,88 @@ docker run --name mysql -d -v mysql_data_volume:/var/lib/mysql -e MYSQL_ROOT_PAS
 docker volume create sqlserver_data_volume
 docker run --name sqlserver -d -v sqlserver_data_volume:/var/opt/mssql -e ACCEPT_EULA=Y -e MSSQL_SA_PASSWORD='YourStrong!Pass123' mcr.microsoft.com/mssql server:2022-latest
 ```
+
+tạo nháp dữ liệu cho db postgres
+```bash
+psql -U postgres
+
+# show database
+\l
+
+# show table
+\dt
+
+# create Table
+CREATE TABLE users (name VARCHAR(255));
+
+# thêm dữ liệu vào table
+INSERT INTO users (name) VALUES ('LONG'),('CHUONG'),('LAM');
+
+# show dữ liệu
+SELECT * FROM users;
+```
+
+# BACKUP VOLUME
+
+Từ Volume export ra file
+```bash
+docker run --rm -v database_data_volume:/var/lib/postgresql -v ./:/backup ubuntu tar cvf /backup/database_data_volume.tar -C /var/lib/postgresql .
+```
+
+`docker run --rm`: tạo 1 container tạm, tự động xoá container
+`-v database_data_volume:/var/lib/postgresql`: gắn volume database_data_volume vào container tạm
+`-v ./:/backup`: lấy đường dẫn ở trên máy (host) và bind mount vào folder bên trong container tạm
+`ubuntu`: dùng image ubuntu
+`tar`: tạo (nén) ra file có đuổi .tar
+`c`: Create
+`v`: show các folder được nén
+`f`: file tên file output
+`x`: giải nén file thành dữ liệu
+`-C`: giống cd, di chuyển tới folder
+
+# RESTORE VOLUME (tar)
+```bash
+docker run --rm -v database_data_volume:/var/lib/postgresql -v ./:/backup ubuntu tar xvf /backup/database_data_volume.tar -C /var/lib/postgresql
+```
+
+
+# CLEAR - dọn dẹp rác
+
+```bash
+docker system df -v
+```
+`-v`: show chi tiết
+
+Images    
+Xoá bỏ image không sài ví dụ : <none><none>
+```bash
+docker image prune -f
+```      
+Containers  
+không nên sài, tự kiểm soát
+```bash
+docker container prune -f
+```
+Local Volumes
+Không sài
+```bash
+docker volume prune -f
+```
+Build Cache  
+```bash
+docker builder prune -f
+```
+
+Combo hay sài
+```bash
+docker builder prune -f
+docker image prune -f
+```
+
+# Tối ưu Dockerfile
+
+## Cache
+- tăng tốc độ build
+
+## Stage (giai đoạn)
 
