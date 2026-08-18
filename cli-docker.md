@@ -45,6 +45,7 @@ docker ps = process status
 
 docker container start [CONTAINER_NAME/ID]
 docker container stop [CONTAINER_NAME/ID]
+docker container remove [CONTAINER_NAME/ID]
 
 # Tab logs docker desktop
 docker container logs [CONTAINER_NAME/ID]
@@ -110,7 +111,7 @@ docker volume create postgres_data_volume
 docker run --name database -d -v postgres_data_volume:/var/lib/postgresql -e POSTGRES_PASSWORD=12345 -p 5432:5432 postgres:18
 
 # Mount đường trên máy host (recommend)
-docker run --name database -d -v ./database_data:/var/lib/postgresql -e POSTGRES_PASSWORD=12345 -p 5432:5432 postgres:18
+docker run --name database -d -v ./postgres_data:/var/lib/postgresql -e POSTGRES_PASSWORD=12345 -p 5432:5432 postgres:18
 
 # Mongo
 docker volume create mongo_data_volume
