@@ -32,7 +32,7 @@ services:
     depends_on:
       - database
 
-# docker run --name js_nestjs_container -d -p 8004:3000 --env-file=.env js_nestjs_image
+  # docker run --name js_nestjs_container -d -p 8004:3000 --env-file=.env js_nestjs_image
   js_nestjs:
     image: js_nestjs_image
     container_name: js_nestjs
@@ -42,6 +42,38 @@ services:
       - ../js_nestjs/.env
     depends_on:
       - database
+
+  # docker run --name csharp_be_container -d -p 8001:8080 --env-file=.env csharp_be_image
+  csharp_be:
+    image: csharp_be_image
+    container_name: csharp_be
+    ports:
+      - 8005:8080
+    env_file:
+      - ../csharp_be/.env
+    depends_on:
+      - database
+
+  # docker run --name my-app-container -d -p 12345:3000 --network demo_network vulebaolong/my-app-image
+  js_nextjs:
+    image: vulebaolong/my-app-image
+    container_name: js_nextjs
+    ports:
+      - 3001:3000
+
+  # docker run --name html_container -d -p 3000:80 html_image
+  html:
+    image: html_image
+    container_name: html
+    ports:
+      - 3002:80
+
+  # docker run --name js_react_vite_container -d -p 3001:80 js_react_vite_image
+  js_react_vite:
+    image: js_react_vite_image
+    container_name: js_react_vite
+    ports:
+      - 3003:80
 
 volumes:
   postgres-data:
