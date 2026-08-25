@@ -154,3 +154,40 @@ Nhấn **OK**.
 1. AWS Security Group mở port `443`.
 2. DNS Cloudflare bật đám mây cam **Proxied**.
 3. Cloudflare → SSL/TLS → Overview → chọn **Full (strict)**.
+
+## URL Rewrite & Application Request Routing
+
+> ARR yêu cầu URL Rewrite -> đúng thứ tự: URL Rewrite -> ARR
+
+### Install
+
+1. Microsoft IIS URL Rewrite 2.1
+
+- https://www.iis.net/downloads/microsoft/url-rewrite -> English -> x64 installer
+
+2. Microsoft Application Request Routing 3.0
+
+- https://www.iis.net/downloads/microsoft/application-request-routing -> ARR 3.0 -> x64 installer
+
+3. Mở lại / Reset IIS
+
+```bash
+ iisreset
+```
+
+4. Check
+
+- Chọn tên server ở cột trái.
+- Trong Features View cần thấy:
+    - URL Rewrite
+    - Application Request Routing Cache
+
+### Thiết lập URL REWRITE
+
+- chọn website (bên trái)
+- chọn URL Rewrite
+- chọn Add Rules (bên phải)
+- Reverse Proxy
+- OK
+- Inbound Rules
+    - localhost:3000 (url đang host của ứng dụng)
