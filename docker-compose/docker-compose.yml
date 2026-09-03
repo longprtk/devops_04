@@ -68,11 +68,11 @@ services:
 
   # docker run --name my-app-container -d -p 12345:3000 --network demo_network vulebaolong/my-app-image
   js_nextjs:
-    build:
-      context: ../js_nextjs
-      dockerfile: Dockerfile
-    image: js_nextjs
+    # build:
+    #   context: ../js_nextjs
+    #   dockerfile: Dockerfile
     # image: vulebaolong/my-app-image sai chip
+    image: vulebaolong/js_nextjs_image:latest
     container_name: js_nextjs
     ports:
       - 3001:3000
