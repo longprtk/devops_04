@@ -72,7 +72,7 @@ services:
     #   context: ../js_nextjs
     #   dockerfile: Dockerfile
     # image: vulebaolong/my-app-image sai chip
-    image: vulebaolong/js_nextjs_image:latest
+    image: js_nextjs_image:latest
     container_name: js_nextjs
     ports:
       - 3001:3000

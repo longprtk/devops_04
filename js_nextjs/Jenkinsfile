@@ -10,29 +10,29 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t vulebaolong/js_nextjs_image:latest .'
+                sh 'docker build -t js_nextjs_image:latest .'
             }
         }
 
-        stage('Login Docker') {
-            steps {
-                withCredentials([
-                    usernamePassword(credentialsId:'docker-login',usernameVariable:'DOCKER_USER', passwordVariable:'DOCKER_PASS')
-                ]) {
-                    sh '''
-                        docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
-                    '''
-                }
-            }
-        }
+        // stage('Login Docker') {
+        //     steps {
+        //         withCredentials([
+        //             usernamePassword(credentialsId:'docker-login',usernameVariable:'DOCKER_USER', passwordVariable:'DOCKER_PASS')
+        //         ]) {
+        //             sh '''
+        //                 docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
+        //             '''
+        //         }
+        //     }
+        // }
 
-        stage('Push Image To Docker Hub') {
-            steps {
-                sh '''
-                    docker push vulebaolong/js_nextjs_image:latest
-                '''            
-            }
-        }
+        // stage('Push Image To Docker Hub') {
+        //     steps {
+        //         sh '''
+        //             docker push vulebaolong/js_nextjs_image:latest
+        //         '''            
+        //     }
+        // }
 
          stage('Deploy') {
             steps {
@@ -41,6 +41,8 @@ pipeline {
                     string(credentialsId:'ip-server-run', variable:'IP_SERVER_RUN')
                 ]) {
                     sh '''
+                        docker save js_nextjs_image:latest | gzip | ssh -o StrictHostKeyChecking=no  -i ${SSH_KEY} ${SSH_USER}@${IP_SERVER_RUN} "gunzip | docker load"
+
                         ssh -o StrictHostKeyChecking=no  -i ${SSH_KEY} ${SSH_USER}@${IP_SERVER_RUN} "
                             cd /home/ubuntu/devops_04/docker-compose
 
